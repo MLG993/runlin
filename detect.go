@@ -7,7 +7,6 @@ import (
 	"strings"
 )
 
-// Funktion zum Überprüfen, ob eine Datei eine Grafik-Engine verwendet
 func detectGraphicsEngine(filePath string) bool {
 	file, err := os.Open(filePath)
 	if err != nil {
@@ -16,16 +15,15 @@ func detectGraphicsEngine(filePath string) bool {
 	}
 	defer file.Close()
 
-	// Typische Zeichenfolgen, die auf eine Grafik-Engine hinweisen könnten
 	signatures := []string{
-		"Direct3D",  // DirectX
-		"OpenGL",    // OpenGL
-		"Vulkan",    // Vulkan
-		"D3D",       // Allgemeine DirectX Signatur
-		"DXGI",      // DirectX Graphics Infrastructure
-		"shader",    // Shader-Programmen
-		"texture",   // Texturen, typisches Grafikelement
-		"gameengine", // Häufiges Wort in Spiel-Engines
+		"Direct3D",  
+		"OpenGL",   
+		"Vulkan",    
+		"D3D",       
+		"DXGI",     
+		"shader",   
+		"texture",   
+		"gameengine",
 	}
 
 	scanner := bufio.NewScanner(file)
@@ -33,31 +31,31 @@ func detectGraphicsEngine(filePath string) bool {
 		line := scanner.Text()
 		for _, signature := range signatures {
 			if strings.Contains(line, signature) {
-				return true // Grafik-Engine erkannt
+				return true 
 			}
 		}
 	}
 
 	if err := scanner.Err(); err != nil {
-		fmt.Printf("Fehler beim Lesen der Datei: %v\n", err)
+		fmt.Printf("Error while opening the file: %v\n", err)
 		os.Exit(1)
 	}
 
-	return false // Keine Grafik-Engine gefunden
+	return false
 }
 
 func main() {
 	if len(os.Args) < 2 {
-		fmt.Println("Nutzung: go run detect.go <Pfad zur .exe-Datei>")
+		fmt.Println("Usage: go run detect.go <Path to .exe-file>")
 		return
 	}
 
 	appPath := os.Args[1]
 
 	if detectGraphicsEngine(appPath) {
-		fmt.Printf("Die Anwendung %s verwendet eine Grafik-Engine. Empfohlen: Proton.\n", appPath)
+		fmt.Printf("The application %s uses a graphic-engine. Recomendation: Proton.\n", appPath)
 	} else {
-		fmt.Printf("Die Anwendung %s verwendet keine bekannte Grafik-Engine. Empfohlen: Wine.\n", appPath)
+    fmt.Printf("The application %s uses a graphic-engine. Recomendation: Wine.\n", appPath)
 	}
 }
 

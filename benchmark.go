@@ -7,13 +7,11 @@ import (
   "time"
 )
 
-// Funktion zur Überprüfung der Installation von Wine und Proton
 func checkInstallation(executor string) bool {
 	_, err := exec.LookPath(executor)
 	return err == nil
 }
 
-// Funktion zum Testen der Performance-Komponenten
 func checkPerformanceComponents() map[string]bool {
 	requiredComponents := []string{"dxvk", "vkd3d"}
 	componentStatus := make(map[string]bool)
@@ -25,11 +23,9 @@ func checkPerformanceComponents() map[string]bool {
 	return componentStatus
 }
 
-// Funktion zur Erfassung von Systemmetriken
 func measureSystemMetrics(executor string) (map[string]string, error) {
 	metrics := make(map[string]string)
 
-	// Beispiel für die Erfassung von CPU- und Speicherverbrauch
 	cpuUsage, err := exec.Command("sh", "-c", "top -bn1 | grep 'Cpu(s)'").Output()
 	if err != nil {
 		return nil, err
@@ -42,9 +38,8 @@ func measureSystemMetrics(executor string) (map[string]string, error) {
 	}
 	metrics["Memory Usage"] = strings.TrimSpace(string(memUsage))
 
-	// Metriken zur Laufzeitanalyse
 	startTime := time.Now()
-	cmd := exec.Command(executor, "--version") // Dummy-Befehl zur Messung des Startaufwands
+	cmd := exec.Command(executor, "--version") 
 	err = cmd.Run()
 	if err != nil {
 		return nil, err
@@ -55,9 +50,8 @@ func measureSystemMetrics(executor string) (map[string]string, error) {
 	return metrics, nil
 }
 
-// Funktion zur Vergleichsanalyse
 func compareMetrics(metrics1, metrics2 map[string]string) {
-	fmt.Println("\nVergleich der Leistungsmetriken:")
+	fmt.Println("\nComparing powermetrics:")
 
 	for key, val1 := range metrics1 {
 		if val2, exists := metrics2[key]; exists {
@@ -69,43 +63,42 @@ func compareMetrics(metrics1, metrics2 map[string]string) {
 func main() {
 	executors := []string{"wine", "proton"}
 
-	fmt.Println("Überprüfung der Installation von Wine und Proton...")
+	fmt.Println("Checking Proton and Wine installation...")
 
 	for _, execName := range executors {
 		if checkInstallation(execName) {
-			fmt.Printf("%s ist installiert.\n", execName)
+			fmt.Printf("%s is not installed.\n", execName)
 		} else {
-			fmt.Printf("%s ist nicht installiert.\n", execName)
+			fmt.Printf("%s is not installed.\n", execName)
 		}
 	}
 
-	fmt.Println("\nÜberprüfung der Performance-Komponenten...")
+	fmt.Println("\nChecking the performance components...")
 	performanceComponents := checkPerformanceComponents()
 	for comp, status := range performanceComponents {
 		if status {
-			fmt.Printf("%s ist installiert.\n", comp)
+			fmt.Printf("%s is not installed.\n", comp)
 		} else {
-			fmt.Printf("%s ist nicht installiert.\n", comp)
+			fmt.Printf("%s is not installed.\n", comp)
 		}
 	}
 
-	fmt.Println("\nErfassung der Systemmetriken für Wine...")
+	fmt.Println("\nGetting your system-stats for wine...")
 	wineMetrics, err := measureSystemMetrics("wine")
 	if err != nil {
-		fmt.Printf("Fehler beim Erfassen der Systemmetriken für Wine: %v\n", err)
+		fmt.Printf("Error while getting your pc specs: %v\n", err)
 		return
 	}
 
-	fmt.Println("\nErfassung der Systemmetriken für Proton...")
+	fmt.Println("\nGetting your system-stats for proton...")
 	protonMetrics, err := measureSystemMetrics("proton")
 	if err != nil {
-		fmt.Printf("Fehler beim Erfassen der Systemmetriken für Proton: %v\n", err)
+		fmt.Printf("Error while getting your pc specs: %v\n", err)
 		return
 	}
 
-	// Vergleich der Metriken
 	compareMetrics(wineMetrics, protonMetrics)
 
-	fmt.Println("\nBenchmark-Test abgeschlossen.")
+	fmt.Println("\nBenchmark is done.")
 }
 

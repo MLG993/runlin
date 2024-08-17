@@ -14,59 +14,59 @@ func isInstalled(cmdName string) bool {
 }
 
 func installDependencies(deps []string) {
-	fmt.Println("Überprüfen und Installieren der Abhängigkeiten...")
+	fmt.Println("Checking and installing Dependencies...")
 
 	for _, dep := range deps {
 		if !isInstalled(dep) {
-			fmt.Printf("Installiere %s...\n", dep)
+			fmt.Printf("Installing %s...\n", dep)
 			installCmd := exec.Command("sudo", "yay", "-S", "--needed", "--noconfirm", dep)
 			installCmd.Stdout = os.Stdout
 			installCmd.Stderr = os.Stderr
 			err := installCmd.Run()
 			if err != nil {
-				fmt.Printf("Fehler bei der Installation von %s: %v\n", dep, err)
+				fmt.Printf("Error while installing %s: %v\n", dep, err)
 				os.Exit(1)
 			}
 		} else {
-			fmt.Printf("%s ist bereits installiert.\n", dep)
+			fmt.Printf("%s is already installed.\n", dep)
 		}
 	}
-	fmt.Println("Alle Abhängigkeiten sind installiert.")
+	fmt.Println("Every Dependencies are installed.")
 }
 
 func installPerformanceEnhancers() {
-	fmt.Println("Überprüfen auf optionale Performance-Verbesserungen...")
+	fmt.Println("Checking optional Performance opportunities...")
 
 	performanceDeps := []string{"dxvk-bin", "vkd3d-bin"} 
 	for _, dep := range performanceDeps {
 		if !isInstalled(dep) {
-			fmt.Printf("%s ist nicht installiert. Möchten Sie es installieren? (j/n): ", dep)
+			fmt.Printf("%s is not installed? Do you want to install it? (y/n): ", dep)
 			var response string
 			fmt.Scanln(&response)
 			if strings.ToLower(response) == "j" {
 				installDependencies([]string{dep})
 			}
 		} else {
-			fmt.Printf("%s ist bereits installiert.\n", dep)
+			fmt.Printf("%s is already installed.\n", dep)
 		}
 	}
-	fmt.Println("Alle Performance-Verbesserungen sind installiert.")
+	fmt.Println("Every Perfomance increasing opportunity is installed.")
 }
 
 func runWithWine(appPath string) {
-	fmt.Printf("Starte %s mit Wine...\n", appPath)
+	fmt.Printf("Starting %s with Wine...\n", appPath)
 	cmd := exec.Command("wine", appPath)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	err := cmd.Run()
 	if err != nil {
-		fmt.Printf("Fehler beim Starten der Anwendung mit Wine: %v\n", err)
+		fmt.Printf("Error while starting: %v\n", err)
 		os.Exit(1)
 	}
 }
 
 func runWithProton(appPath string) {
-	fmt.Printf("Starte %s mit Proton...\n", appPath)
+	fmt.Printf("Starting %s with Proton...\n", appPath)
 	protonPath := "/usr/bin/proton" 
 
 	cmd := exec.Command(protonPath, "run", appPath)
@@ -74,14 +74,14 @@ func runWithProton(appPath string) {
 	cmd.Stderr = os.Stderr
 	err := cmd.Run()
 	if err != nil {
-		fmt.Printf("Fehler beim Starten der Anwendung mit Proton: %v\n", err)
+    fmt.Printf("Error while starting: %v\n", err)
 		os.Exit(1)
 	}
 }
 
 func main() {
 	if len(os.Args) < 3 {
-		fmt.Println("Nutzung: go run runlin.go [proton | wine | install | performance] <Pfad zur .exe-Datei>")
+		fmt.Println("Usage: go run runlin.go [proton | wine | install | performance] <Path to .exe-file>")
 		return
 	}
 
@@ -95,13 +95,13 @@ func main() {
 		if isInstalled("wine") {
 			runWithWine(appPath)
 		} else {
-			fmt.Println("Wine ist nicht installiert. Bitte führen Sie 'go run runlin.go install' aus, um es zu installieren.")
+			fmt.Println("Wine is not installed pls type go run runlin.go install")
 		}
 	case "proton":
 		if isInstalled("proton") {
 			runWithProton(appPath)
 		} else {
-			fmt.Println("Proton ist nicht installiert. Bitte führen Sie 'go run runlin.go install' aus, um es zu installieren.")
+			fmt.Println("Proton is not installed pls type go run runlin.go install.")
 		}
 	case "performance":
 		installPerformanceEnhancers()
@@ -110,10 +110,10 @@ func main() {
 		} else if isInstalled("wine") {
 			runWithWine(appPath)
 		} else {
-			fmt.Println("Kein unterstützter Executor gefunden. Bitte installieren Sie Proton oder Wine.")
+			fmt.Println("No supported Executor.")
 		}
 	default:
-		fmt.Println("Ungültiger Befehl. Nutzung: go run runlin.go [proton | wine | install | performance] <Pfad zur .exe-Datei>")
+		fmt.Println("Invalid command. Usage: go run runlin.go [proton | wine | install | performance] <Path to .exe-file>")
 	}
 }
 
